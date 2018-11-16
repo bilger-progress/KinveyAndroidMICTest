@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.yahov.kinveyandroidmictest"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -25,4 +25,19 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation ':kinvey-android:+@aar'
+    implementation ':relinker:+@aar'
+    implementation ':realm-android-library:+@aar'
+    annotationProcessor files('libs/pubnub-gson-4.18.0-all.jar')
+    annotationProcessor files('libs/realm-annotations-processor-3.2.1.jar')
+}
+
+buildscript {
+    repositories {
+        jcenter() // or mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+    }
 }
