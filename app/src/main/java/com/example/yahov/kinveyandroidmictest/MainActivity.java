@@ -4,16 +4,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyPingCallback;
+
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private Client mKinveyClient;
+    private Button kinveyLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        kinveyLoginButton = findViewById(R.id.KinveyLoginButton);
 
         // Set-up Kinvey Client.
         mKinveyClient = new Client.Builder("kid_Sk18GADum", "2e4f66f377964d96a67bd09e2286c6ee", this).build();
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Boolean aBoolean) {
                 Toast.makeText(getApplicationContext(), "Kinvey Ping Response: " + aBoolean.toString(), Toast.LENGTH_LONG).show();
+                kinveyLoginButton.setVisibility(View.VISIBLE);
             }
 
             @Override
