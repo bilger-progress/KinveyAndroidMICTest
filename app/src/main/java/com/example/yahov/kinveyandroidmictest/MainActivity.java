@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private String kinveyMICServiceID = "xxx";
     private String kinveyAppKey = "xxx";
     private String kinveyAppSecret = "xxx";
-    private String redirectURI = "myRedirectURI://"; // The same should be set on the Kinvey MIC service configuration!
+    private String kinveyInstanceID = "xxx";
+    private String redirectURI = "xxx"; // The same should be set on the Kinvey MIC service configuration!
     private String testUserName = "xxx";
     private String testUserPassword = "xxx";
 
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         kinveyLoginButton = findViewById(R.id.KinveyLoginButton);
 
         // Set-up Kinvey Client.
-        mKinveyClient = new Client.Builder(kinveyAppKey, kinveyAppSecret, this).build();
+        mKinveyClient = new Client.Builder(kinveyAppKey, kinveyAppSecret, this).setInstanceID(kinveyInstanceID).build();
+
         // Ping Kinvey Backend.
         mKinveyClient.ping(new KinveyPingCallback() {
             @Override
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(User user) {
                         Toast.makeText(getApplicationContext(), "Logged-in successfully. Please check log messages.", Toast.LENGTH_LONG).show();
-                        System.out.println(user.toString());
+                        System.out.println(user);
                     }
 
                     @Override
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(User user) {
                         Toast.makeText(getApplicationContext(), "Logged-in successfully. Please check log messages.", Toast.LENGTH_LONG).show();
-                        System.out.println(user.toString());
+                        System.out.println(user);
                     }
 
                     @Override
