@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent){
         super.onNewIntent(intent);
-        UserStore.onOAuthCallbackReceived(intent,null, mKinveyClient);
+        UserStore.onOAuthCallbackReceived(intent, null, mKinveyClient);
     }
 
     /**
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void defaultKinveyMICLogin () {
         mKinveyClient.setMICApiVersion("3");
-        UserStore.loginWithMIC(mKinveyClient,null, redirectURI,
+        UserStore.loginWithMIC(mKinveyClient, null, redirectURI,
                 new KinveyMICCallback<User>() {
                     @Override
                     public void onSuccess(User user) {
