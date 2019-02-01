@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     // TODO: Set the values below!
     private Client mKinveyClient;
     private Button kinveyLoginButton;
-    private String kinveyMICServiceID = null;
     private String kinveyAppKey = "xxx";
     private String kinveyAppSecret = "xxx";
     private String kinveyInstanceID = "xxx";
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent){
         super.onNewIntent(intent);
-        UserStore.onOAuthCallbackReceived(intent, kinveyMICServiceID, mKinveyClient);
+        UserStore.onOAuthCallbackReceived(intent,null, mKinveyClient);
     }
 
     /**
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void defaultKinveyMICLogin () {
         mKinveyClient.setMICApiVersion("3");
-        UserStore.loginWithMIC(mKinveyClient, kinveyMICServiceID, redirectURI,
+        UserStore.loginWithMIC(mKinveyClient,null, redirectURI,
                 new KinveyMICCallback<User>() {
                     @Override
                     public void onSuccess(User user) {
