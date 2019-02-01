@@ -7,9 +7,10 @@ import android.os.Bundle;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyPingCallback;
 import com.kinvey.android.callback.KinveyMICCallback;
-import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.android.model.User;
 import com.kinvey.android.store.UserStore;
+import com.kinvey.java.core.KinveyClientCallback;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -19,13 +20,11 @@ public class MainActivity extends AppCompatActivity {
     // TODO: Set the values below!
     private Client mKinveyClient;
     private Button kinveyLoginButton;
-    private String kinveyMICServiceID = "xxx";
+    private String kinveyMICServiceID = null;
     private String kinveyAppKey = "xxx";
     private String kinveyAppSecret = "xxx";
     private String kinveyInstanceID = "xxx";
-    private String redirectURI = "xxx"; // The same should be set on the Kinvey MIC service configuration!
-    private String testUserName = "xxx";
-    private String testUserPassword = "xxx";
+    private String redirectURI = "myRedirectURI://"; // The same should be set on the Kinvey MIC service configuration!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,24 @@ public class MainActivity extends AppCompatActivity {
         kinveyLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Set default or headless login flow. Look at the private function declared below!
+                if(mKinveyClient.getActiveUser() != null) {
+                    // There's a User logged-in. Please log-out.
+                    UserStore.logout(mKinveyClient, new KinveyClientCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            Toast.makeText(getApplicationContext(), "Exception was thrown. Check logs.", Toast.LENGTH_LONG).show();
+                            throwable.printStackTrace();
+                        }
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Proceed with Social Login.
+                            defaultKinveyMICLogin();
+                        }
+                    });
+                } else {
+                    // No User present. Proceed.
+                    defaultKinveyMICLogin();
+                }
             }
         });
     }
@@ -66,35 +82,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Calls for Kinvey MIC login with a headless state, using
-     * username and password as parameters.
-     */
-
-    private void headlessKinveyMICLogin () {
-        UserStore.loginWithAuthorizationCodeAPI(mKinveyClient, testUserName, testUserPassword, kinveyMICServiceID, redirectURI,
-                new KinveyUserCallback<User>() {
-                    @Override
-                    public void onSuccess(User user) {
-                        Toast.makeText(getApplicationContext(), "Logged-in successfully. Please check log messages.", Toast.LENGTH_LONG).show();
-                        System.out.println(user);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable error) {
-                        Toast.makeText(getApplicationContext(), "Exception was thrown. Check logs.", Toast.LENGTH_LONG).show();
-                        error.printStackTrace();
-                    }
-            });
-    }
-
-    /**
      * Calls for default Kinvey MIC login flow.
      * Will open a popup window, where the User can enter their
      * username and password.
      */
 
     private void defaultKinveyMICLogin () {
-        UserStore.loginWithAuthorizationCodeLoginPage(mKinveyClient, kinveyMICServiceID, redirectURI,
+        mKinveyClient.setMICApiVersion("3");
+        UserStore.loginWithMIC(mKinveyClient, kinveyMICServiceID, redirectURI,
                 new KinveyMICCallback<User>() {
                     @Override
                     public void onSuccess(User user) {
